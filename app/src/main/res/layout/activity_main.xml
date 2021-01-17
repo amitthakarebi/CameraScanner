@@ -6,14 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    
+
     <com.google.android.material.navigation.NavigationView
+        android:id="@+id/navigationView"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/navigationView"
+        android:layout_gravity="start"
         app:headerLayout="@layout/navigation_header"
-        app:menu="@menu/navigation_menu"
-        android:layout_gravity="start"/>
+        app:menu="@menu/navigation_menu" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -33,12 +33,12 @@
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/black"
-                android:text="Heelooow"
-                android:textSize="50dp"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/folderRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
         </LinearLayout>
 
     </LinearLayout>
