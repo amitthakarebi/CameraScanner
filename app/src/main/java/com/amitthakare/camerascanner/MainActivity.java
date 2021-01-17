@@ -12,10 +12,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
+
 import com.amitthakare.camerascanner.Adapter.FolderAdapter;
 import com.google.android.material.navigation.NavigationView;
 
@@ -38,14 +40,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ini();
-        //it request the permission and create the necessary folders.
-        requestPermissions();
+        checkBuildAndCreateFolder();
+
+    }
+
+    private void checkBuildAndCreateFolder() {
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            //it request the permission and create the necessary folders.
+            requestPermissions();
+            //createFolders();
+        } else {
+            createFolders();
+        }
 
     }
 
     private void requestPermissions() {
-        ActivityCompat.requestPermissions(MainActivity.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.CAMERA},101);
+        ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 101);
     }
 
     private void createFolders() {
@@ -55,14 +67,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         list.add(Var.PDF_DIR);
         list.add(Var.TEMP_DIR);
 
-        Log.e("List",list.toString());
+        Log.e("List", list.toString());
 
-        for (int i = 0; i<list.size(); i++)
-        {
+        for (int i = 0; i < list.size(); i++) {
             File file = new File(list.get(i));
-            if (file.mkdirs())
-            {
-                Toast.makeText(this, "Created Folder : "+(i+1), Toast.LENGTH_SHORT).show();
+            if (file.mkdirs()) {
+                Toast.makeText(this, "Created Folder : " + (i + 1), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "No", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -84,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //getSupportActionBar().setTitle("Home");
 
         //---------Navigation Drawer Menu-----------//
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this,drawerLayout,toolbar,R.string.open,R.string.close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, toolbar, R.string.open, R.string.close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
 
@@ -98,11 +110,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
 
-        if (drawerLayout.isDrawerOpen(GravityCompat.START))
-        {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        }else
-        {
+        } else {
             super.onBackPressed();
         }
     }
@@ -110,8 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.nav_home:
                 break;
             case R.id.nav_share:
@@ -128,15 +137,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        switch (requestCode){
+        switch (requestCode) {
             case 101:
-                if (grantResults[0]==PackageManager.PERMISSION_GRANTED)
-                {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     createFolders();
-                }else
-                {
+                } else {
                     Toast.makeText(this, "Declined!", Toast.LENGTH_SHORT).show();
                 }
+                break;
         }
 
     }
