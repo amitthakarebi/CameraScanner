@@ -17,6 +17,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -33,8 +35,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+//Step5:we have to implement the DocumentFolderDialog with its listener to get the text.
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DocumentFolderDialog.DocumentFolderDialogListener {
 
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -54,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ini();
         //checkBuildAndCreateFolder();
         requestPermissions();
-        getFolderDirectory();
 
     }
 
@@ -174,6 +175,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private void openCreateFolderDialog() {
+        DocumentFolderDialog documentFolderDialog = new DocumentFolderDialog();
+        documentFolderDialog.show(getSupportFragmentManager(),"example dialog");
+    }
+
     @Override
     public void onBackPressed() {
 
@@ -208,11 +214,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case 101:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     createFolders();
+                    getFolderDirectory();
                 } else {
                     Toast.makeText(this, "Declined!", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
 
+    }
+    //it is used to show the menus on the toolbar
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_menu,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    //it is use to handle the click on the menus which is shown on the toolbar
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id)
+        {
+            case R.id.createDocument:
+                openCreateFolderDialog();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    //this is comming from the documentfolderdialog class
+    @Override
+    public void applyText(String documentName) {
+        Toast.makeText(this, documentName, Toast.LENGTH_SHORT).show();
     }
 }
