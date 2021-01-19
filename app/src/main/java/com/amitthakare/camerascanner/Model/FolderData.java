@@ -2,24 +2,16 @@ package com.amitthakare.camerascanner.Model;
 
 public class FolderData {
 
-    String folderImage, folderName, folderDate, folderTime, folderPages;
+    String folderName, folderDate, folderTime, folderPages,folderImage;
 
     public FolderData() {
     }
 
-    public FolderData(String folderImage, String folderName, String folderDate, String folderTime, String folderPages) {
-        this.folderImage = folderImage;
+    public FolderData(String folderName, String folderDate, String folderTime, String folderPages, String folderImage) {
         this.folderName = folderName;
         this.folderDate = folderDate;
         this.folderTime = folderTime;
         this.folderPages = folderPages;
-    }
-
-    public String getFolderImage() {
-        return folderImage;
-    }
-
-    public void setFolderImage(String folderImage) {
         this.folderImage = folderImage;
     }
 
@@ -53,5 +45,13 @@ public class FolderData {
 
     public void setFolderPages(String folderPages) {
         this.folderPages = folderPages;
+    }
+
+    public String getFolderImage() {
+        return folderImage;
+    }
+
+    public void setFolderImage(String folderImage) {
+        this.folderImage = folderImage;
     }
 }
