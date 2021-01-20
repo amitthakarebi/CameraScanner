@@ -39,7 +39,7 @@ public class DocumentFolderDialog extends AppCompatDialogFragment {
                         String documentName = editTextDocumentName.getText().toString();
                         //Step4: it will call the appyText method through interface and pass the string value.
                         //Step5 : implement DocumentFolderDialog.DocumentFolderDialogListener to get the text in any activity.
-                        listener.applyText(documentName);
+                        listener.createDocument(documentName);
                     }
                 });
 
@@ -62,6 +62,6 @@ public class DocumentFolderDialog extends AppCompatDialogFragment {
 
     //Step1 : here we just create the interface with method which wil we implement in activity to get the string
     public interface DocumentFolderDialogListener{
-        void applyText(String documentName);
+        void createDocument(String documentName);
     }
 }

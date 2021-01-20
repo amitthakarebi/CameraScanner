@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amitthakare.camerascanner.Model.FolderData;
 import com.amitthakare.camerascanner.R;
+import com.amitthakare.camerascanner.Var;
 import com.bumptech.glide.Glide;
 
 import java.util.List;

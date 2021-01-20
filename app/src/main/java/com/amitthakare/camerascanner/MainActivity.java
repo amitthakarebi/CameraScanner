@@ -35,6 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+
 //Step5:we have to implement the DocumentFolderDialog with its listener to get the text.
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DocumentFolderDialog.DocumentFolderDialogListener {
 
@@ -47,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     String folderName, folderDate, folderTime, folderPages, folderImage;
     List<FolderData> folderList;
+
 
 
     @Override
@@ -92,13 +94,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         File directory[] = root.listFiles();
         folderList = new ArrayList<>();
 
-        for (File Outer : directory)
-        {
-            if ((Outer.listFiles().length>=1))
-            {
-                File []sortedFileName =Outer.listFiles();
-                if (sortedFileName!=null && sortedFileName.length > 1)
-                {
+        for (File Outer : directory) {
+            if ((Outer.listFiles().length >= 1)) {
+                File[] sortedFileName = Outer.listFiles();
+                if (sortedFileName != null && sortedFileName.length > 1) {
                     Arrays.sort(sortedFileName, new Comparator<File>() {
                         @Override
                         public int compare(File object1, File object2) {
@@ -107,13 +106,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     });
                 }
 
-                if (sortedFileName!=null && sortedFileName.length > 0)
-                {
+                if (sortedFileName != null && sortedFileName.length > 0) {
                     folderImage = sortedFileName[0].getPath();
                 }
-            }else
-            {
+            } else {
                 //set Drawable img
+                Uri path = Uri.parse("android.resource://"+getApplicationContext().getPackageName()+"/" + R.drawable.ic_baseline_android_24);
+                folderImage = "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/15ed55ac-6ea4-42ea-b506-9eecc02bb639/d609yh7-825deba0-857d-441a-a2d1-851710cecf57.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOiIsImlzcyI6InVybjphcHA6Iiwib2JqIjpbW3sicGF0aCI6IlwvZlwvMTVlZDU1YWMtNmVhNC00MmVhLWI1MDYtOWVlY2MwMmJiNjM5XC9kNjA5eWg3LTgyNWRlYmEwLTg1N2QtNDQxYS1hMmQxLTg1MTcxMGNlY2Y1Ny5wbmcifV1dLCJhdWQiOlsidXJuOnNlcnZpY2U6ZmlsZS5kb3dubG9hZCJdfQ.EDAaUS_mHCeOg2X8yzDpfaOUixnEk7o9Yu4f87l3CWk";
             }
 
             folderName = Outer.getName();
@@ -126,9 +125,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             SimpleDateFormat formatterTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
             folderTime = formatterTime.format(lastModifiedTime);
 
-            folderPages =Outer.listFiles().length+"";
+            folderPages = Outer.listFiles().length + "";
 
-            FolderData folderData = new FolderData(folderName,folderDate,folderTime,folderPages,folderImage);
+            FolderData folderData = new FolderData(folderName, folderDate, folderTime, folderPages, folderImage);
             folderList.add(folderData);
 
         }
@@ -137,18 +136,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         folderRecyclerView.addItemDecoration(dividerItemDecoration);
         folderRecyclerView.setAdapter(folderAdapter);
-    }
-
-    private void checkBuildAndCreateFolder() {
-
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            //it request the permission and create the necessary folders.
-            requestPermissions();
-            //createFolders();
-        } else {
-            createFolders();
-        }
-
     }
 
     private void requestPermissions() {
@@ -169,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (file.mkdirs()) {
                 Toast.makeText(this, "Created Folder : " + (i + 1), Toast.LENGTH_SHORT).show();
             } else {
-               // Toast.makeText(this, "No", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(this, "No", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -177,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void openCreateFolderDialog() {
         DocumentFolderDialog documentFolderDialog = new DocumentFolderDialog();
-        documentFolderDialog.show(getSupportFragmentManager(),"example dialog");
+        documentFolderDialog.show(getSupportFragmentManager(), "example dialog");
     }
 
     @Override
@@ -227,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.toolbar_menu,menu);
+        inflater.inflate(R.menu.toolbar_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
     //it is use to handle the click on the menus which is shown on the toolbar
@@ -237,18 +224,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int id = item.getItemId();
 
-        switch (id)
+        if (id == R.id.createDocument)
         {
-            case R.id.createDocument:
-                openCreateFolderDialog();
+            openCreateFolderDialog();
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    //this is comming from the documentfolderdialog class
     @Override
-    public void applyText(String documentName) {
-        Toast.makeText(this, documentName, Toast.LENGTH_SHORT).show();
+    public void createDocument(String documentName) {
+        File file = new File(Var.IMAGE_DIR+File.separator+documentName);
+        if (!file.exists())
+        {
+            if (file.mkdirs())
+            {
+                Toast.makeText(this, "Created!", Toast.LENGTH_SHORT).show();
+                getFolderDirectory();
+            }else
+            {
+                Toast.makeText(this, "Not Created!", Toast.LENGTH_SHORT).show();
+            }
+        }else
+        {
+            Toast.makeText(this, "Document Already Exist!", Toast.LENGTH_SHORT).show();
+        }
     }
 }

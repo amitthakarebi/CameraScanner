@@ -14,4 +14,5 @@ public class Var {
     public static String PDF_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()+"/CameraScanner/PDF";
 
 
+
 }
