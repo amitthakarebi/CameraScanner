@@ -85,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         navigationView.bringToFront();
         navigationView.setNavigationItemSelectedListener(this);
         navigationView.setCheckedItem(R.id.nav_home);
-
     }
 
     private void getFolderDirectory() {
@@ -136,6 +135,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         folderRecyclerView.addItemDecoration(dividerItemDecoration);
         folderRecyclerView.setAdapter(folderAdapter);
+
+        folderAdapter.setOnRecyclerClickListerner(new FolderAdapter.OnRecyclerClickListener() {
+            @Override
+            public void onRecyclerItemClick(int position) {
+                Toast.makeText(MainActivity.this, folderList.get(position).getFolderName(), Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     private void requestPermissions() {

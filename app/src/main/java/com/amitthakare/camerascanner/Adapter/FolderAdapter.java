@@ -22,6 +22,16 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
 
     Context mContext;
     List<FolderData> mData;
+    private OnRecyclerClickListener recyclerClickListener;
+
+    public void setOnRecyclerClickListerner(OnRecyclerClickListener listerner)
+    {
+        recyclerClickListener = listerner;
+    }
+
+    public interface OnRecyclerClickListener {
+        void onRecyclerItemClick(int position);
+    }
 
     public FolderAdapter(Context mContext, List<FolderData> mData) {
         this.mContext = mContext;
@@ -32,7 +42,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.folder_design,parent,false);
-        return new MyViewHolder(view);
+        return new MyViewHolder(view,recyclerClickListener);
     }
 
     @Override
@@ -56,7 +66,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
         ImageView fImage;
         TextView fName, fDate, fTime, fPages;
 
-        public MyViewHolder(@NonNull View itemView) {
+        public MyViewHolder(@NonNull View itemView, final OnRecyclerClickListener listener) {
             super(itemView);
 
             fImage = itemView.findViewById(R.id.folderImage);
@@ -64,6 +74,20 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
             fDate = itemView.findViewById(R.id.folderDate);
             fTime = itemView.findViewById(R.id.folderTime);
             fPages = itemView.findViewById(R.id.folderPages);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (listener!=null)
+                    {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION)
+                        {
+                            listener.onRecyclerItemClick(position);
+                        }
+                    }
+                }
+            });
 
         }
     }
