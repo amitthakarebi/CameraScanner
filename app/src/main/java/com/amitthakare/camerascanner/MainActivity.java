@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.amitthakare.camerascanner.Adapter.FolderAdapter;
 import com.amitthakare.camerascanner.Model.FolderData;
 import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -140,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onRecyclerItemClick(int position) {
                 Toast.makeText(MainActivity.this, folderList.get(position).getFolderName(), Toast.LENGTH_SHORT).show();
+                //Snackbar.make(findViewById(R.id.drawerLayout),folderList.get(position).getFolderName(),Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -255,5 +257,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         {
             Toast.makeText(this, "Document Already Exist!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == 101)
+        {
+            if (folderAdapter.RemoveItem(item.getGroupId()))
+            {
+                Snackbar.make(findViewById(R.id.drawerLayout),"Deleted",Snackbar.LENGTH_LONG).show();
+            }
+        }
+        return super.onContextItemSelected(item);
     }
 }
