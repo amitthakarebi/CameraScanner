@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,13 +21,17 @@ import com.amitthakare.camerascanner.Var;
 import com.bumptech.glide.Glide;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
-public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHolder> {
+public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHolder> implements Filterable {
 
 
     Context mContext;
     List<FolderData> mData;
+    //for text search
+    List<FolderData> mDataFullList;
+
     private OnRecyclerClickListener recyclerClickListener;
 
     public void setOnRecyclerClickListerner(OnRecyclerClickListener listerner)
@@ -35,14 +40,15 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
     }
 
     public interface OnRecyclerClickListener {
-        void onRecyclerItemClick(int position);
-    }
 
+        void onRecyclerItemClick(int position);
+
+    }
     public FolderAdapter(Context mContext, List<FolderData> mData) {
         this.mContext = mContext;
         this.mData = mData;
+        mDataFullList = new ArrayList<>(mData);
     }
-
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -67,6 +73,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 
         ImageView fImage;
+
         TextView fName, fDate, fTime, fPages;
 
         public MyViewHolder(@NonNull View itemView, final OnRecyclerClickListener listener) {
@@ -95,15 +102,15 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
 
 
         }
-
         @Override
         public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
             menu.add(getAdapterPosition(),101,0,"Delete");
 
         }
-    }
 
+    }
     //this is not interface method when contexmenu is generated then we can access this in oncontextitemselected by adapter.
+
     public boolean RemoveItem(int position)
     {
         File file = new File(Var.IMAGE_DIR+"/"+mData.get(position).getFolderName());
@@ -118,4 +125,46 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
             return false;
         }
     }
+
+    //for text search
+    @Override
+    public Filter getFilter() {
+        return recyclerFilter;
+    }
+
+    private Filter recyclerFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence charSequence) {
+            List<FolderData> filteredList = new ArrayList<>();
+            if (charSequence == null || charSequence.length() == 0)
+            {
+                //if we not entered any value then show full list as it is
+                filteredList.addAll(mDataFullList);
+            }else
+            {
+                String filterPattern = charSequence.toString().toLowerCase().trim();
+
+                for (FolderData item : mDataFullList)
+                {
+                    if (item.getFolderName().toLowerCase().contains(filterPattern))
+                    {
+                        filteredList.add(item);
+                    }
+                }
+            }
+
+            //this results will be passed to the publishResults and then added the data to the mData and refresh the recycler.
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+            mData.clear();
+            mData.addAll((List) filterResults.values);
+            notifyDataSetChanged();
+        }
+    };
 }
+

@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.amitthakare.camerascanner.Adapter.FolderAdapter;
@@ -224,6 +225,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_menu, menu);
+        //for searching text and passing to the filter method which is present in the adapterclass
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+
+                folderAdapter.getFilter().filter(s);
+
+                return false;
+            }
+        });
+
         return super.onCreateOptionsMenu(menu);
     }
     //it is use to handle the click on the menus which is shown on the toolbar
@@ -271,3 +291,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onContextItemSelected(item);
     }
 }
+
+
+// Recycler Filter Video                        = https://www.youtube.com/watch?v=sJ-Z9G0SDhc
+// Recycler Item Delete Context Menu Video      = https://www.youtube.com/watch?v=y7gNVZ0JGOg
+// Recycler On Item Click Listener              = https://www.youtube.com/watch?v=bhhs4bwYyhc
