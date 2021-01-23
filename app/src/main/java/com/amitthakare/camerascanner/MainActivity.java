@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -193,12 +194,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
-        switch (item.getItemId()) {
-            case R.id.nav_home:
-                break;
-            case R.id.nav_share:
-                Toast.makeText(this, "share!", Toast.LENGTH_SHORT).show();
-                break;
+        int id = item.getItemId();
+
+        if (id==R.id.nav_home)
+        {
+
+        }else if (id==R.id.nav_share)
+        {
+            Toast.makeText(this, "share!", Toast.LENGTH_SHORT).show();
+        }else if (id==R.id.nav_about)
+        {
+            Intent intent = new Intent(MainActivity.this,AboutUs.class);
+            startActivity(intent);
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
