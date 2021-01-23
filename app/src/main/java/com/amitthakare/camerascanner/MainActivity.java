@@ -39,7 +39,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 //Step5:we have to implement the DocumentFolderDialog with its listener to get the text.
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DocumentFolderDialog.DocumentFolderDialogListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, DocumentFolderDialog.DocumentFolderDialogListener, RenameDialog.RenameDialogListener {
 
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     String folderName, folderDate, folderTime, folderPages, folderImage;
     List<FolderData> folderList;
+
+    //for deection of the item who is goinng to rename
+    int renameItemId;
 
 
 
@@ -123,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             folderDate = formatterDate.format(lastModifiedDate);
 
             Date lastModifiedTime = new Date(Outer.lastModified());
-            SimpleDateFormat formatterTime = new SimpleDateFormat("HH:mm", Locale.getDefault());
+            SimpleDateFormat formatterTime = new SimpleDateFormat("hh:mm aa", Locale.getDefault());
             folderTime = formatterTime.format(lastModifiedTime);
 
             folderPages = Outer.listFiles().length + "";
@@ -141,8 +144,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         folderAdapter.setOnRecyclerClickListerner(new FolderAdapter.OnRecyclerClickListener() {
             @Override
             public void onRecyclerItemClick(int position) {
-                Toast.makeText(MainActivity.this, folderList.get(position).getFolderName(), Toast.LENGTH_SHORT).show();
-                //Snackbar.make(findViewById(R.id.drawerLayout),folderList.get(position).getFolderName(),Snackbar.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, folderList.get(position).getFolderName(), Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.drawerLayout),folderList.get(position).getFolderName(),Snackbar.LENGTH_LONG).show();
             }
         });
 
@@ -287,8 +290,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             {
                 Snackbar.make(findViewById(R.id.drawerLayout),"Deleted",Snackbar.LENGTH_LONG).show();
             }
+        }else if (item.getItemId() == 102)
+        {
+            RenameDialog renameDialog = new RenameDialog();
+            renameDialog.show(getSupportFragmentManager(),"example dialog");
+            renameItemId = item.getGroupId();
         }
         return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void renameDocument(String documentName) {
+        String OldName = folderList.get(renameItemId).getFolderName();
+        File oldFile = new File(Var.IMAGE_DIR+"/"+OldName);
+        File newFile = new File(Var.IMAGE_DIR+"/"+documentName);
+
+        if (oldFile.renameTo(newFile))
+        {
+            Snackbar.make(findViewById(R.id.drawerLayout),"Renamed!",Snackbar.LENGTH_LONG).show();
+            folderAdapter.notifyDataSetChanged();
+            getFolderDirectory();
+        }
     }
 }
 

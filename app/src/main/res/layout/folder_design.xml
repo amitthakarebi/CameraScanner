@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#D7D8FB"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="#D8EBF3"
     android:layout_marginTop="5dp"
-    android:layout_marginBottom="5dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -23,62 +23,86 @@
         android:id="@+id/folderName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:gravity="start"
         android:text="FolderName - CameraScanner"
         android:textColor="@color/black"
-        android:layout_marginStart="10dp"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/folderImage"
         app:layout_constraintTop_toTopOf="@+id/folderImage" />
 
     <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="8dp"
+        android:text="Date Of Creation : "
+        android:textColor="@color/black"
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/folderImage"
+        app:layout_constraintTop_toBottomOf="@+id/folderName" />
+
+    <TextView
         android:id="@+id/folderDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="16/12/1999"
+        android:textColor="@color/black"
+        android:layout_marginStart="2dp"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:text="16/12/1999"
-        android:textSize="16sp"
+        android:text="Time of Creation : "
         android:textColor="@color/black"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/folderImage"
-        app:layout_constraintTop_toBottomOf="@+id/folderName" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/folderTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
         android:text="20:15"
+        android:textColor="@color/black"
+        android:layout_marginStart="2dp"
         android:textSize="16sp"
-        app:layout_constraintStart_toEndOf="@+id/folderDate"
-        app:layout_constraintTop_toBottomOf="@+id/folderName" />
+        app:layout_constraintBottom_toBottomOf="@+id/textView2"
+        app:layout_constraintStart_toEndOf="@+id/textView2"
+        app:layout_constraintTop_toTopOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
-        android:textColor="@color/black"
         android:layout_marginTop="10dp"
-        android:text="No Of Pages :"
+        android:text="No Of Pages : "
+        android:textColor="@color/black"
         android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/folderImage"
-        app:layout_constraintTop_toBottomOf="@+id/folderDate" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/folderPages"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:textColor="@color/black"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="2dp"
         android:text="02"
+        android:textColor="@color/black"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView3"
         app:layout_constraintStart_toEndOf="@+id/textView3"
-        app:layout_constraintTop_toBottomOf="@+id/folderTime" />
+        app:layout_constraintTop_toTopOf="@+id/textView3" />
 
 
 

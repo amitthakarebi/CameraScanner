@@ -105,6 +105,7 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
         @Override
         public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
             menu.add(getAdapterPosition(),101,0,"Delete");
+            menu.add(getAdapterPosition(),102,1,"Rename");
 
         }
 
