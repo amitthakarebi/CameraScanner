@@ -146,7 +146,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onRecyclerItemClick(int position) {
                 //Toast.makeText(MainActivity.this, folderList.get(position).getFolderName(), Toast.LENGTH_SHORT).show();
-                Snackbar.make(findViewById(R.id.drawerLayout),folderList.get(position).getFolderName(),Snackbar.LENGTH_LONG).show();
+                //Snackbar.make(findViewById(R.id.drawerLayout),folderList.get(position).getFolderName(),Snackbar.LENGTH_LONG).show();
+                Intent intent = new Intent(MainActivity.this,MainActivity2.class);
+                intent.putExtra("folder_name",folderList.get(position).getFolderName());
+                startActivity(intent);
             }
         });
 

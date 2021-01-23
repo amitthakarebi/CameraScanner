@@ -5,6 +5,7 @@ import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amitthakare.camerascanner.MainActivity;
@@ -58,6 +60,10 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+
+        holder.folderDesign.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.fade_scale_transition));
+        //holder.fImage.setAnimation(AnimationUtils.loadAnimation(mContext,R.anim.fade_transition_animation));
+
         Glide.with(mContext).load(mData.get(position).getFolderImage()).into(holder.fImage);
         holder.fName.setText(mData.get(position).getFolderName());
         holder.fDate.setText(mData.get(position).getFolderDate());
@@ -76,6 +82,8 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
 
         TextView fName, fDate, fTime, fPages;
 
+        ConstraintLayout folderDesign;
+
         public MyViewHolder(@NonNull View itemView, final OnRecyclerClickListener listener) {
             super(itemView);
 
@@ -85,6 +93,8 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
             fTime = itemView.findViewById(R.id.folderTime);
             fPages = itemView.findViewById(R.id.folderPages);
             itemView.setOnCreateContextMenuListener(this);
+
+            folderDesign = itemView.findViewById(R.id.folderDesign);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
