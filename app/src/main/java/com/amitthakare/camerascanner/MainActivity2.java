@@ -68,8 +68,6 @@ public class MainActivity2 extends AppCompatActivity {
     ImageFileAdapter imageFileAdapter;
     String imageFile, imageName;
 
-    //check if move image option is checked or not
-    boolean isMovable=false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,7 +208,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         @Override
         public boolean isLongPressDragEnabled() {
-            return isMovable;
+            return Var.isMovable;
         }
     };
 
@@ -282,12 +280,12 @@ public class MainActivity2 extends AppCompatActivity {
             if (item.isChecked())
             {
                 item.setChecked(false);
-                isMovable=false;
+                Var.isMovable=false;
                 Toast.makeText(this, "Now you can delete the items!", Toast.LENGTH_SHORT).show();
             }else
             {
                 item.setChecked(true);
-                isMovable=true;
+                Var.isMovable=true;
                 Toast.makeText(this, "Now you can swap the item position!", Toast.LENGTH_SHORT).show();
 
 

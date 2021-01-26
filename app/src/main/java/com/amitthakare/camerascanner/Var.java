@@ -13,6 +13,9 @@ public class Var {
     public static String TEMP_DIR =  Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()+"/CameraScanner/Temp";
     public static String PDF_DIR = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS).getAbsolutePath()+"/CameraScanner/PDF";
 
+    //----------------For Cheching the image movable or not--------------/
+    public static boolean isMovable = false;
+
 
 
 }

@@ -72,7 +72,12 @@ public class ImageFileAdapter extends RecyclerView.Adapter<ImageFileAdapter.MyVi
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View view, ContextMenu.ContextMenuInfo contextMenuInfo) {
-            menu.add(getAdapterPosition(),101,0,"Delete");
+
+            if (!Var.isMovable)
+            {
+                // add option when movable is false
+                menu.add(getAdapterPosition(),101,0,"Delete");
+            }
         }
     }
 
