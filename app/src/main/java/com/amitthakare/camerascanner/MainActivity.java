@@ -269,6 +269,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.createDocument)
         {
             openCreateFolderDialog();
+        }else if (id == R.id.refresh)
+        {
+            getFolderDirectory();
         }
         return super.onOptionsItemSelected(item);
     }
