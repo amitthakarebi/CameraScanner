@@ -10,6 +10,7 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
@@ -130,7 +131,7 @@ public class MainActivity2 extends AppCompatActivity {
                     try {
                         tempFile = File.createTempFile("tempFile", ".jpg", new File(Var.TEMP_DIR));
                         if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(MainActivity2.this, BuildConfig.APPLICATION_ID + ".fileprovider", tempFile));
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(MainActivity2.this, "com.amitthakare.camerascanner.fileprovider", tempFile));
                             tempFilePath = Uri.fromFile(tempFile) + "";
                             Log.d("texts", "openc: " + tempFilePath);
                             startActivityForResult(cameraIntent, 200);
@@ -159,6 +160,76 @@ public class MainActivity2 extends AppCompatActivity {
             }
         });
 
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+        itemTouchHelper.attachToRecyclerView(fileRecyclerView);
+
+    }
+
+    ItemTouchHelper.SimpleCallback simpleCallback =new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
+            | ItemTouchHelper.START | ItemTouchHelper.END,0) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+
+            String fromFileName = listFiles.get(fromPosition).getImageName();
+            String toFileName = listFiles.get(toPosition).getImageName();
+
+            String newFromFileName = getNewFileName(toFileName);
+            String newToFileName = getNewFileName(fromFileName);
+
+            Log.e("FromFileName",fromFileName);
+            Log.e("ToFileName",toFileName);
+            Log.e("newFromFileName",newFromFileName);
+            Log.e("newToFileName",newToFileName);
+
+            File file = new File(Var.IMAGE_DIR+"/"+folderName+File.separator+fromFileName);
+            File file1 = new File(Var.IMAGE_DIR+"/"+folderName+File.separator+newFromFileName);
+            file.renameTo(file1);
+
+            File file2 = new File(Var.IMAGE_DIR+"/"+folderName+File.separator+toFileName);
+            File file3 = new File(Var.IMAGE_DIR+"/"+folderName+File.separator+newToFileName);
+            file2.renameTo(file3);
+
+            Toast.makeText(MainActivity2.this, "From : "+ fromFileName+" To : "+toFileName, Toast.LENGTH_SHORT).show();
+
+
+
+            Collections.swap(listFiles,fromPosition,toPosition);
+            Objects.requireNonNull(recyclerView.getAdapter()).notifyItemMoved(fromPosition,toPosition);
+            getFolderFiles();
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+        }
+    };
+
+
+    private String getNewFileName(String original)
+    {
+        String FullOldName = original;
+        Log.e("oldName",FullOldName);
+
+        String OldName = FullOldName.substring(0, (FullOldName.length() - 4));
+        Log.e("After .jpg",OldName);
+
+        String Part1 = OldName.substring(0, 10);
+        Log.e("Part1",Part1);
+
+        String Part2 = OldName.substring(10);
+        Log.e("Part2",Part2);
+
+        int Part2Int = Integer.parseInt(Part2) - 2;
+        Log.e("After Calculation Part2",""+Part2Int);
+
+        String NewName = Part1 + Part2Int + ".jpg";
+        Log.e("Final Name",NewName);
+
+        return NewName;
     }
 
     private void getFolderFiles() {
