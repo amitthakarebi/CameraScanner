@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
@@ -15,6 +16,7 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Build;
@@ -48,8 +50,8 @@ public class MainActivity2 extends AppCompatActivity {
     DrawerLayout drawerLayout2;
     Toolbar toolbar2;
 
-    private String folderName;
-    private File folderPath;
+    private String folderName, tempFilePath;
+    private File folderPath, tempFile;
 
     private FloatingActionButton fabCamera, fabGalleryMultiple;
 
@@ -106,6 +108,19 @@ public class MainActivity2 extends AppCompatActivity {
                     ActivityCompat.requestPermissions(MainActivity2.this, new String[]{Manifest.permission.CAMERA}, 1);
                 } else {
                     //do here your work
+                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    tempFile = null;
+                    try {
+                        tempFile = File.createTempFile("tempFile", ".jpg", new File(Var.TEMP_DIR));
+                        if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, FileProvider.getUriForFile(MainActivity2.this, BuildConfig.APPLICATION_ID + ".fileprovider", tempFile));
+                            tempFilePath = Uri.fromFile(tempFile) + "";
+                            Log.d("texts", "openc: " + tempFilePath);
+                            startActivityForResult(cameraIntent, 200);
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
                 }
             }
@@ -122,7 +137,7 @@ public class MainActivity2 extends AppCompatActivity {
                     selectIntent.setAction(Intent.ACTION_GET_CONTENT);
                     selectIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                     selectIntent.setType("image/*");
-                    startActivityForResult(Intent.createChooser(selectIntent,"Select Picture"),300);
+                    startActivityForResult(Intent.createChooser(selectIntent, "Select Picture"), 300);
                 }
             }
         });
@@ -154,11 +169,23 @@ public class MainActivity2 extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+        if (requestCode == 200 && resultCode == RESULT_OK) {
+
+            String timeStamp = new SimpleDateFormat("yyyyMMddHHmmssSSSS").format(new Date());
+            File newFile = new File(folderPath, timeStamp + ".jpg");
+
+            if (tempFile.renameTo(newFile)) {
+                Snackbar.make(findViewById(R.id.drawerLayout2), "Bitmap New", Snackbar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(findViewById(R.id.drawerLayout2), "Not", Snackbar.LENGTH_LONG).show();
+            }
+
+        }
+
         if (requestCode == 300 && resultCode == RESULT_OK) {
             ClipData clipData = data.getClipData();
 
-            if (clipData!=null)
-            {
+            if (clipData != null) {
                 for (int i = 0; i < clipData.getItemCount(); i++) {
                     Uri imageUri = clipData.getItemAt(i).getUri();
 
@@ -177,7 +204,7 @@ public class MainActivity2 extends AppCompatActivity {
                     outStream = new ByteArrayOutputStream();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
 
-                    Snackbar.make(findViewById(R.id.drawerLayout2),"Bitmap"+i,Snackbar.LENGTH_LONG).show();
+                    //Snackbar.make(findViewById(R.id.drawerLayout2),"Bitmap"+i,Snackbar.LENGTH_LONG).show();
 
 
                     try {
@@ -192,7 +219,7 @@ public class MainActivity2 extends AppCompatActivity {
                     }
 
                 }
-            }else {
+            } else {
                 Uri imageUri = data.getData();
                 Bitmap bitmap = getBitmapByUri(imageUri);
 
@@ -208,7 +235,6 @@ public class MainActivity2 extends AppCompatActivity {
 
                 outStream = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
-                Snackbar.make(findViewById(R.id.drawerLayout2),"Bitmap only one",Snackbar.LENGTH_LONG).show();
 
 
                 try {
