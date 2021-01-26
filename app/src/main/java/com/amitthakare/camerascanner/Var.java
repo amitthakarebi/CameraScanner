@@ -16,6 +16,9 @@ public class Var {
     //----------------For Cheching the image movable or not--------------/
     public static boolean isMovable = false;
 
+    //----------------For Pdf File show and share -----------------------/
+    public static String PDF_FILE_NAME=null;
+    public static File PDF_FILE_PATH=null;
 
 
 }

@@ -20,7 +20,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.ImageDecoder;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +35,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.amitthakare.camerascanner.Adapter.ImageFileAdapter;
@@ -68,6 +74,11 @@ public class MainActivity2 extends AppCompatActivity {
     ImageFileAdapter imageFileAdapter;
     String imageFile, imageName;
 
+    //For PDf Making
+    LinearLayout invisibleLayout;
+    ImageView invisibleImageView;
+    Bitmap bitmap,scaledBitmap;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +97,9 @@ public class MainActivity2 extends AppCompatActivity {
         //---------General Hooks--------//
         fabCamera = findViewById(R.id.fabCamera);
         fabGalleryMultiple = findViewById(R.id.fabGalleryMultiple);
+        invisibleImageView = findViewById(R.id.invisibleImageView);
+        invisibleLayout = findViewById(R.id.invisibleLayout);
+
 
         //--------Recycler View ----------//
         fileRecyclerView = findViewById(R.id.imageRecyclerView);
@@ -261,6 +275,101 @@ public class MainActivity2 extends AppCompatActivity {
 
     }
 
+    private void createPDF()
+    {
+        File currentFolder = new File(Var.IMAGE_DIR+"/"+folderName);
+        File pdfLocation = new File(Var.PDF_DIR);
+
+        File[] fileList =currentFolder.listFiles();
+        PdfDocument pdfDocument = new PdfDocument();
+
+        if (fileList.length!=0 | fileList.length>0)
+        {
+
+            for (int i=0;i< fileList.length;i++)
+            {
+                imageName =listFiles.get(i).getImageName();
+                imageFile = listFiles.get(i).getImage();
+                bitmap = BitmapFactory.decodeFile(imageFile);
+                invisibleImageView.setImageBitmap(bitmap);
+
+                Bitmap newBitmap =Bitmap.createBitmap(invisibleLayout.getWidth(),invisibleLayout.getHeight(),Bitmap.Config.ARGB_8888);
+                Canvas canvas1 = new Canvas(newBitmap);
+                invisibleLayout.draw(canvas1);
+
+                float heightBitmap = (float) (newBitmap.getHeight());
+                float widthBitmap = (float) (newBitmap.getWidth());
+
+                Log.e("heightBitmap", "" + heightBitmap);
+                Log.e("widthBitmap", "" + widthBitmap);
+
+
+                float pageWidth = 1240;
+                float pageHeight = 1754;
+
+                scaledBitmap = newBitmap;
+
+                PdfDocument.PageInfo myPageInfo = new PdfDocument.PageInfo.Builder(((int) pageWidth), ((int) pageHeight), i + 1).create();
+                PdfDocument.Page page = pdfDocument.startPage(myPageInfo);
+                float x1, y1, x2, y2, x, y;
+
+                x1 = myPageInfo.getPageWidth() / 2f;
+                y1 = myPageInfo.getPageHeight() / 2f;
+                x2 = scaledBitmap.getWidth() / 2f;
+                y2 = scaledBitmap.getHeight() / 2f;
+
+                x = x1 - x2;
+                y = y1 - y2;
+
+
+                //trying to add text
+                Paint myPaint = new Paint();
+                myPaint.setTextAlign(Paint.Align.RIGHT);
+                myPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                myPaint.setTextSize(30);
+                myPaint.setColor(getResources().getColor(R.color.black));
+
+                float textXpoint = myPageInfo.getPageWidth() - 60;
+                float textYpoint = myPageInfo.getPageHeight() - 40;
+
+                Canvas canvas = page.getCanvas();
+
+                page.getCanvas().drawBitmap(scaledBitmap, x, y, null);
+                canvas.drawText("Made with CameraScanner (Indian)", textXpoint, textYpoint, myPaint);
+                pdfDocument.finishPage(page);
+
+            }
+
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            Var.PDF_FILE_NAME = timeStamp + ".pdf";
+
+            File myPDFFile = new File(pdfLocation.getPath(), timeStamp + ".pdf");
+            Var.PDF_FILE_PATH = myPDFFile;
+
+
+            if (myPDFFile.exists()) {
+                Toast.makeText(this, "Alredy Present", Toast.LENGTH_SHORT).show();
+            } else {
+                try {
+
+                    pdfDocument.writeTo(new FileOutputStream(myPDFFile));
+                    Toast.makeText(this, "Created", Toast.LENGTH_SHORT).show();
+                    /*Intent intent = new Intent(MainActivity2.this, PDFViewer.class);
+                    startActivity(intent);*/
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            pdfDocument.close();
+
+        }else
+        {
+            Toast.makeText(this, "Add Some Images!", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -273,6 +382,7 @@ public class MainActivity2 extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.createPDF) {
             Snackbar.make(findViewById(R.id.drawerLayout2), "Creating Pdf", Snackbar.LENGTH_LONG).show();
+            createPDF();
         } else if (id == R.id.settingPDF) {
             Snackbar.make(findViewById(R.id.drawerLayout2), "Setting PDF", Snackbar.LENGTH_LONG).show();
         } else if (id == R.id.moveImage)
@@ -287,12 +397,8 @@ public class MainActivity2 extends AppCompatActivity {
                 item.setChecked(true);
                 Var.isMovable=true;
                 Toast.makeText(this, "Now you can swap the item position!", Toast.LENGTH_SHORT).show();
-
-
             }
         }
-
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -307,7 +413,6 @@ public class MainActivity2 extends AppCompatActivity {
                 Snackbar.make(findViewById(R.id.drawerLayout2),"Deleted!",Snackbar.LENGTH_LONG).show();
             }
         }
-
         return super.onContextItemSelected(item);
     }
 
