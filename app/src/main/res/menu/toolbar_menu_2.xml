@@ -13,6 +13,11 @@
         android:title="PDF Setting"
         />
 
+    <item
+        android:id="@+id/moveImage"
+        android:title="Move Images"
+        android:checkable="true"/>
+
 
 
 

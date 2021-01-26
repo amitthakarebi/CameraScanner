@@ -68,6 +68,9 @@ public class MainActivity2 extends AppCompatActivity {
     ImageFileAdapter imageFileAdapter;
     String imageFile, imageName;
 
+    //check if move image option is checked or not
+    boolean isMovable=false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -194,8 +197,6 @@ public class MainActivity2 extends AppCompatActivity {
 
             Toast.makeText(MainActivity2.this, "From : "+ fromFileName+" To : "+toFileName, Toast.LENGTH_SHORT).show();
 
-
-
             Collections.swap(listFiles,fromPosition,toPosition);
             Objects.requireNonNull(recyclerView.getAdapter()).notifyItemMoved(fromPosition,toPosition);
             getFolderFiles();
@@ -205,6 +206,11 @@ public class MainActivity2 extends AppCompatActivity {
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
 
+        }
+
+        @Override
+        public boolean isLongPressDragEnabled() {
+            return isMovable;
         }
     };
 
@@ -264,7 +270,6 @@ public class MainActivity2 extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
@@ -272,10 +277,40 @@ public class MainActivity2 extends AppCompatActivity {
             Snackbar.make(findViewById(R.id.drawerLayout2), "Creating Pdf", Snackbar.LENGTH_LONG).show();
         } else if (id == R.id.settingPDF) {
             Snackbar.make(findViewById(R.id.drawerLayout2), "Setting PDF", Snackbar.LENGTH_LONG).show();
+        } else if (id == R.id.moveImage)
+        {
+            if (item.isChecked())
+            {
+                item.setChecked(false);
+                isMovable=false;
+                Toast.makeText(this, "Now you can delete the items!", Toast.LENGTH_SHORT).show();
+            }else
+            {
+                item.setChecked(true);
+                isMovable=true;
+                Toast.makeText(this, "Now you can swap the item position!", Toast.LENGTH_SHORT).show();
+
+
+            }
         }
 
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+
+        if (item.getItemId() == 101)
+        {
+            if (imageFileAdapter.RemoveItem(item.getGroupId(),folderName))
+            {
+                getFolderFiles();
+                Snackbar.make(findViewById(R.id.drawerLayout2),"Deleted!",Snackbar.LENGTH_LONG).show();
+            }
+        }
+
+        return super.onContextItemSelected(item);
     }
 
     @Override
