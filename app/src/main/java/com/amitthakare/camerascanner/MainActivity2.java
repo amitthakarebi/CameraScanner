@@ -9,6 +9,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.ActivityNotFoundException;
@@ -30,6 +32,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.amitthakare.camerascanner.Adapter.ImageFileAdapter;
+import com.amitthakare.camerascanner.Model.ImageFileData;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
@@ -39,6 +43,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -55,11 +61,18 @@ public class MainActivity2 extends AppCompatActivity {
 
     private FloatingActionButton fabCamera, fabGalleryMultiple;
 
+    //RecyclerView
+    List<ImageFileData> listFiles;
+    RecyclerView fileRecyclerView;
+    ImageFileAdapter imageFileAdapter;
+    String imageFile, imageName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
         ini();
+        getFolderFiles();
     }
 
     private void ini() {
@@ -71,6 +84,10 @@ public class MainActivity2 extends AppCompatActivity {
         //---------General Hooks--------//
         fabCamera = findViewById(R.id.fabCamera);
         fabGalleryMultiple = findViewById(R.id.fabGalleryMultiple);
+
+        //--------Recycler View ----------//
+        fileRecyclerView = findViewById(R.id.imageRecyclerView);
+        fileRecyclerView.setLayoutManager(new GridLayoutManager(this,3));
 
         //------------Hooks-------------//
         drawerLayout2 = findViewById(R.id.drawerLayout2);
@@ -144,6 +161,31 @@ public class MainActivity2 extends AppCompatActivity {
 
     }
 
+    private void getFolderFiles() {
+        File file = new File(Var.IMAGE_DIR+ "/" +folderName);
+        File directory[] = file.listFiles();
+        listFiles = new ArrayList<>();
+
+        for (File files : directory )
+        {
+            imageFile = files.getPath();
+            imageName = files.getName();
+            ImageFileData imageFileData = new ImageFileData(imageFile,imageName);
+            listFiles.add(imageFileData);
+        }
+
+        Collections.sort(listFiles, new Comparator<ImageFileData>() {
+            @Override
+            public int compare(ImageFileData o1, ImageFileData o2) {
+                return o1.getImageName().compareTo(o2.getImageName());
+            }
+        });
+
+        imageFileAdapter = new ImageFileAdapter(getApplicationContext(),listFiles);
+        fileRecyclerView.setAdapter(imageFileAdapter);
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -175,7 +217,8 @@ public class MainActivity2 extends AppCompatActivity {
             File newFile = new File(folderPath, timeStamp + ".jpg");
 
             if (tempFile.renameTo(newFile)) {
-                Snackbar.make(findViewById(R.id.drawerLayout2), "Bitmap New", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.drawerLayout2), "Created!", Snackbar.LENGTH_LONG).show();
+                getFolderFiles();
             } else {
                 Snackbar.make(findViewById(R.id.drawerLayout2), "Not", Snackbar.LENGTH_LONG).show();
             }
@@ -213,6 +256,7 @@ public class MainActivity2 extends AppCompatActivity {
                         fo.write(outStream.toByteArray());
                         fo.flush();
                         fo.close();
+                        getFolderFiles();
                     } catch (IOException e) {
                         Log.w("TAG", "Error saving image file: " + e.getMessage());
                         e.printStackTrace();
@@ -243,6 +287,7 @@ public class MainActivity2 extends AppCompatActivity {
                     fo.write(outStream.toByteArray());
                     fo.flush();
                     fo.close();
+                    getFolderFiles();
                 } catch (IOException e) {
                     Log.w("TAG", "Error saving image file: " + e.getMessage());
                     e.printStackTrace();

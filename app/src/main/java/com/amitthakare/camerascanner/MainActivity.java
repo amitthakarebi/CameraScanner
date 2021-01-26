@@ -325,6 +325,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             getFolderDirectory();
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getFolderDirectory();
+    }
 }
 
 
