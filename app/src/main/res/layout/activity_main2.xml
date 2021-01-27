@@ -68,9 +68,9 @@
             app:layout_constraintTop_toBottomOf="@+id/navigationToolbar2" />
 
         <LinearLayout
-            android:id="@+id/invisibleLayout"
-            android:layout_width="1190px"
-            android:layout_height="1705px"
+            android:id="@+id/invisibleLayoutNormal"
+            android:layout_width="1240px"
+            android:layout_height="1754px"
             android:orientation="vertical"
             android:gravity="center"
             android:visibility="invisible"
@@ -79,7 +79,47 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <ImageView
-                android:id="@+id/invisibleImageView"
+                android:id="@+id/invisibleImageViewNormal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/invisibleLayoutPoor"
+            android:layout_width="595px"
+            android:layout_height="842px"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/invisibleImageViewPoor"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scaleType="fitCenter"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/invisibleLayoutBest"
+            android:layout_width="1654px"
+            android:layout_height="2339px"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/invisibleImageViewBest"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"

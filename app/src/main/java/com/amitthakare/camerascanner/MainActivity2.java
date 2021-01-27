@@ -78,8 +78,8 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
     String imageFile, imageName;
 
     //For PDf Making
-    LinearLayout invisibleLayout;
-    ImageView invisibleImageView;
+    LinearLayout invisibleLayoutPoor,invisibleLayoutNormal,invisibleLayoutBest;
+    ImageView invisibleImageViewPoor,invisibleImageViewNormal,invisibleImageViewBest;
     Bitmap bitmap, scaledBitmap;
 
     //dialog alert
@@ -105,8 +105,13 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
         //---------General Hooks--------//
         fabCamera = findViewById(R.id.fabCamera);
         fabGalleryMultiple = findViewById(R.id.fabGalleryMultiple);
-        invisibleImageView = findViewById(R.id.invisibleImageView);
-        invisibleLayout = findViewById(R.id.invisibleLayout);
+        //for pdf
+        invisibleImageViewPoor = findViewById(R.id.invisibleImageViewPoor);
+        invisibleLayoutPoor = findViewById(R.id.invisibleLayoutPoor);
+        invisibleImageViewNormal = findViewById(R.id.invisibleImageViewNormal);
+        invisibleLayoutNormal = findViewById(R.id.invisibleLayoutNormal);
+        invisibleImageViewBest = findViewById(R.id.invisibleImageViewBest);
+        invisibleLayoutBest = findViewById(R.id.invisibleLayoutBest);
 
 
         //--------Recycler View ----------//
@@ -294,11 +299,39 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
                 imageName = listFiles.get(i).getImageName();
                 imageFile = listFiles.get(i).getImage();
                 bitmap = BitmapFactory.decodeFile(imageFile);
-                invisibleImageView.setImageBitmap(bitmap);
 
-                Bitmap newBitmap = Bitmap.createBitmap(invisibleLayout.getWidth(), invisibleLayout.getHeight(), Bitmap.Config.ARGB_8888);
-                Canvas canvas1 = new Canvas(newBitmap);
-                invisibleLayout.draw(canvas1);
+                float pageWidth = 0;
+                float pageHeight = 0;
+                Bitmap newBitmap = null;
+                Canvas canvas1;
+
+                if (quality.equals("poor"))
+                {
+                    pageWidth = 595;
+                    pageHeight = 842;
+                    invisibleImageViewPoor.setImageBitmap(bitmap);
+                    newBitmap = Bitmap.createBitmap(invisibleLayoutPoor.getWidth(), invisibleLayoutPoor.getHeight(), Bitmap.Config.ARGB_8888);
+                    canvas1 = new Canvas(newBitmap);
+                    invisibleLayoutPoor.draw(canvas1);
+
+                }else if (quality.equals("normal"))
+                {
+                    pageWidth = 1240;
+                    pageHeight = 1754;
+                    invisibleImageViewNormal.setImageBitmap(bitmap);
+                    newBitmap = Bitmap.createBitmap(invisibleLayoutNormal.getWidth(), invisibleLayoutNormal.getHeight(), Bitmap.Config.ARGB_8888);
+                    canvas1 = new Canvas(newBitmap);
+                    invisibleLayoutNormal.draw(canvas1);
+
+                }else if (quality.equals("best"))
+                {
+                    pageWidth = 1654;
+                    pageHeight = 2339;
+                    invisibleImageViewBest.setImageBitmap(bitmap);
+                    newBitmap = Bitmap.createBitmap(invisibleLayoutBest.getWidth(), invisibleLayoutBest.getHeight(), Bitmap.Config.ARGB_8888);
+                    canvas1 = new Canvas(newBitmap);
+                    invisibleLayoutBest.draw(canvas1);
+                }
 
                 float heightBitmap = (float) (newBitmap.getHeight());
                 float widthBitmap = (float) (newBitmap.getWidth());
@@ -306,9 +339,6 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
                 Log.e("heightBitmap", "" + heightBitmap);
                 Log.e("widthBitmap", "" + widthBitmap);
 
-
-                float pageWidth = 1240;
-                float pageHeight = 1754;
 
                 scaledBitmap = newBitmap;
 
@@ -410,13 +440,6 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.createPDF) {
-           /* alertDialog.show();
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    createPDF();
-                }
-            },50);*/
 
             PdfQualityDialog pdfQualityDialog = new PdfQualityDialog();
             pdfQualityDialog.show(getSupportFragmentManager(), "example dialog");
@@ -562,7 +585,14 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
     }
 
     @Override
-    public void getQualityOfPdf(String quality) {
+    public void getQualityOfPdf(final String quality) {
         //call the create pdf method with quality parameter
+        alertDialog.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                createPDF(quality);
+            }
+        },50);
     }
 }
