@@ -77,7 +77,7 @@ public class MainActivity2 extends AppCompatActivity {
     //For PDf Making
     LinearLayout invisibleLayout;
     ImageView invisibleImageView;
-    Bitmap bitmap,scaledBitmap;
+    Bitmap bitmap, scaledBitmap;
 
 
     @Override
@@ -103,7 +103,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         //--------Recycler View ----------//
         fileRecyclerView = findViewById(R.id.imageRecyclerView);
-        fileRecyclerView.setLayoutManager(new GridLayoutManager(this,3));
+        fileRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 
         //------------Hooks-------------//
         drawerLayout2 = findViewById(R.id.drawerLayout2);
@@ -180,8 +180,8 @@ public class MainActivity2 extends AppCompatActivity {
 
     }
 
-    ItemTouchHelper.SimpleCallback simpleCallback =new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
-            | ItemTouchHelper.START | ItemTouchHelper.END,0) {
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT
+            | ItemTouchHelper.START | ItemTouchHelper.END, 0) {
         @Override
         public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
 
@@ -194,23 +194,23 @@ public class MainActivity2 extends AppCompatActivity {
             String newFromFileName = getNewFileName(toFileName);
             String newToFileName = getNewFileName(fromFileName);
 
-            Log.e("FromFileName",fromFileName);
-            Log.e("ToFileName",toFileName);
-            Log.e("newFromFileName",newFromFileName);
-            Log.e("newToFileName",newToFileName);
+            Log.e("FromFileName", fromFileName);
+            Log.e("ToFileName", toFileName);
+            Log.e("newFromFileName", newFromFileName);
+            Log.e("newToFileName", newToFileName);
 
-            File file = new File(Var.IMAGE_DIR+"/"+folderName+File.separator+fromFileName);
-            File file1 = new File(Var.IMAGE_DIR+"/"+folderName+File.separator+newFromFileName);
+            File file = new File(Var.IMAGE_DIR + "/" + folderName + File.separator + fromFileName);
+            File file1 = new File(Var.IMAGE_DIR + "/" + folderName + File.separator + newFromFileName);
             file.renameTo(file1);
 
-            File file2 = new File(Var.IMAGE_DIR+"/"+folderName+File.separator+toFileName);
-            File file3 = new File(Var.IMAGE_DIR+"/"+folderName+File.separator+newToFileName);
+            File file2 = new File(Var.IMAGE_DIR + "/" + folderName + File.separator + toFileName);
+            File file3 = new File(Var.IMAGE_DIR + "/" + folderName + File.separator + newToFileName);
             file2.renameTo(file3);
 
-            Toast.makeText(MainActivity2.this, "From : "+ fromFileName+" To : "+toFileName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity2.this, "From : " + fromFileName + " To : " + toFileName, Toast.LENGTH_SHORT).show();
 
-            Collections.swap(listFiles,fromPosition,toPosition);
-            Objects.requireNonNull(recyclerView.getAdapter()).notifyItemMoved(fromPosition,toPosition);
+            Collections.swap(listFiles, fromPosition, toPosition);
+            Objects.requireNonNull(recyclerView.getAdapter()).notifyItemMoved(fromPosition, toPosition);
             getFolderFiles();
             return false;
         }
@@ -227,39 +227,37 @@ public class MainActivity2 extends AppCompatActivity {
     };
 
 
-    private String getNewFileName(String original)
-    {
+    private String getNewFileName(String original) {
         String FullOldName = original;
-        Log.e("oldName",FullOldName);
+        Log.e("oldName", FullOldName);
 
         String OldName = FullOldName.substring(0, (FullOldName.length() - 4));
-        Log.e("After .jpg",OldName);
+        Log.e("After .jpg", OldName);
 
         String Part1 = OldName.substring(0, 10);
-        Log.e("Part1",Part1);
+        Log.e("Part1", Part1);
 
         String Part2 = OldName.substring(10);
-        Log.e("Part2",Part2);
+        Log.e("Part2", Part2);
 
         int Part2Int = Integer.parseInt(Part2) - 2;
-        Log.e("After Calculation Part2",""+Part2Int);
+        Log.e("After Calculation Part2", "" + Part2Int);
 
         String NewName = Part1 + Part2Int + ".jpg";
-        Log.e("Final Name",NewName);
+        Log.e("Final Name", NewName);
 
         return NewName;
     }
 
     private void getFolderFiles() {
-        File file = new File(Var.IMAGE_DIR+ "/" +folderName);
+        File file = new File(Var.IMAGE_DIR + "/" + folderName);
         File directory[] = file.listFiles();
         listFiles = new ArrayList<>();
 
-        for (File files : directory )
-        {
+        for (File files : directory) {
             imageFile = files.getPath();
             imageName = files.getName();
-            ImageFileData imageFileData = new ImageFileData(imageFile,imageName);
+            ImageFileData imageFileData = new ImageFileData(imageFile, imageName);
             listFiles.add(imageFileData);
         }
 
@@ -270,30 +268,27 @@ public class MainActivity2 extends AppCompatActivity {
             }
         });
 
-        imageFileAdapter = new ImageFileAdapter(getApplicationContext(),listFiles);
+        imageFileAdapter = new ImageFileAdapter(getApplicationContext(), listFiles);
         fileRecyclerView.setAdapter(imageFileAdapter);
 
     }
 
-    private void createPDF()
-    {
-        File currentFolder = new File(Var.IMAGE_DIR+"/"+folderName);
+    private void createPDF() {
+        File currentFolder = new File(Var.IMAGE_DIR + "/" + folderName);
         File pdfLocation = new File(Var.PDF_DIR);
 
-        File[] fileList =currentFolder.listFiles();
+        File[] fileList = currentFolder.listFiles();
         PdfDocument pdfDocument = new PdfDocument();
 
-        if (fileList.length!=0 | fileList.length>0)
-        {
+        if (fileList.length != 0 | fileList.length > 0) {
 
-            for (int i=0;i< fileList.length;i++)
-            {
-                imageName =listFiles.get(i).getImageName();
+            for (int i = 0; i < fileList.length; i++) {
+                imageName = listFiles.get(i).getImageName();
                 imageFile = listFiles.get(i).getImage();
                 bitmap = BitmapFactory.decodeFile(imageFile);
                 invisibleImageView.setImageBitmap(bitmap);
 
-                Bitmap newBitmap =Bitmap.createBitmap(invisibleLayout.getWidth(),invisibleLayout.getHeight(),Bitmap.Config.ARGB_8888);
+                Bitmap newBitmap = Bitmap.createBitmap(invisibleLayout.getWidth(), invisibleLayout.getHeight(), Bitmap.Config.ARGB_8888);
                 Canvas canvas1 = new Canvas(newBitmap);
                 invisibleLayout.draw(canvas1);
 
@@ -361,13 +356,24 @@ public class MainActivity2 extends AppCompatActivity {
                 }
             }
             pdfDocument.close();
+            sharePDF();
 
-        }else
-        {
+        } else {
             Toast.makeText(this, "Add Some Images!", Toast.LENGTH_SHORT).show();
         }
 
 
+    }
+
+    private void sharePDF() {
+        File outputFile = new File(Var.PDF_FILE_PATH.getPath());//change with your path
+        Uri path = FileProvider.getUriForFile(MainActivity2.this, "com.amitthakare.camerascanner.fileprovider", outputFile);
+
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_STREAM, path);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        intent.setType("application/pdf");
+        startActivity(Intent.createChooser(intent, "Share via..."));
     }
 
     @Override
@@ -385,17 +391,14 @@ public class MainActivity2 extends AppCompatActivity {
             createPDF();
         } else if (id == R.id.settingPDF) {
             Snackbar.make(findViewById(R.id.drawerLayout2), "Setting PDF", Snackbar.LENGTH_LONG).show();
-        } else if (id == R.id.moveImage)
-        {
-            if (item.isChecked())
-            {
+        } else if (id == R.id.moveImage) {
+            if (item.isChecked()) {
                 item.setChecked(false);
-                Var.isMovable=false;
+                Var.isMovable = false;
                 Toast.makeText(this, "Now you can delete the items!", Toast.LENGTH_SHORT).show();
-            }else
-            {
+            } else {
                 item.setChecked(true);
-                Var.isMovable=true;
+                Var.isMovable = true;
                 Toast.makeText(this, "Now you can swap the item position!", Toast.LENGTH_SHORT).show();
             }
         }
@@ -405,12 +408,10 @@ public class MainActivity2 extends AppCompatActivity {
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
 
-        if (item.getItemId() == 101)
-        {
-            if (imageFileAdapter.RemoveItem(item.getGroupId(),folderName))
-            {
+        if (item.getItemId() == 101) {
+            if (imageFileAdapter.RemoveItem(item.getGroupId(), folderName)) {
                 getFolderFiles();
-                Snackbar.make(findViewById(R.id.drawerLayout2),"Deleted!",Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.drawerLayout2), "Deleted!", Snackbar.LENGTH_LONG).show();
             }
         }
         return super.onContextItemSelected(item);
