@@ -368,6 +368,7 @@ public class MainActivity2 extends AppCompatActivity {
 
         } else {
             Toast.makeText(this, "Add Some Images!", Toast.LENGTH_SHORT).show();
+            alertDialog.cancel();
         }
 
 
