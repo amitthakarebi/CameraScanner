@@ -3,6 +3,7 @@ package com.amitthakare.camerascanner;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -28,9 +29,11 @@ import android.graphics.pdf.PdfDocument;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -79,11 +82,16 @@ public class MainActivity2 extends AppCompatActivity {
     ImageView invisibleImageView;
     Bitmap bitmap, scaledBitmap;
 
+    //dialog alert
+    private AlertDialog.Builder builder;
+    private AlertDialog alertDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+        createBuilder();
         ini();
         getFolderFiles();
     }
@@ -366,6 +374,7 @@ public class MainActivity2 extends AppCompatActivity {
     }
 
     private void sharePDF() {
+        alertDialog.cancel();
         File outputFile = new File(Var.PDF_FILE_PATH.getPath());//change with your path
         Uri path = FileProvider.getUriForFile(MainActivity2.this, "com.amitthakare.camerascanner.fileprovider", outputFile);
 
@@ -374,6 +383,19 @@ public class MainActivity2 extends AppCompatActivity {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         intent.setType("application/pdf");
         startActivity(Intent.createChooser(intent, "Share via..."));
+    }
+
+    private void createBuilder() {
+
+        builder = new AlertDialog.Builder(this);
+        builder.setIcon(R.drawable.pdf_icon);
+        builder.setTitle("Creating PDF");
+        builder.setCancelable(false);
+        LayoutInflater layoutInflater = getLayoutInflater();
+        View dialogView = layoutInflater.inflate(R.layout.loading_layout,null);
+        builder.setView(dialogView);
+        alertDialog = builder.create();
+
     }
 
     @Override
@@ -387,8 +409,14 @@ public class MainActivity2 extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.createPDF) {
-            Snackbar.make(findViewById(R.id.drawerLayout2), "Creating Pdf", Snackbar.LENGTH_LONG).show();
-            createPDF();
+            alertDialog.show();
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    createPDF();
+                }
+            },50);
+
         } else if (id == R.id.settingPDF) {
             Snackbar.make(findViewById(R.id.drawerLayout2), "Setting PDF", Snackbar.LENGTH_LONG).show();
         } else if (id == R.id.moveImage) {
