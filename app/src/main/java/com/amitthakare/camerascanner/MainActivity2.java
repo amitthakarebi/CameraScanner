@@ -61,7 +61,7 @@ import java.util.Objects;
 
 import javax.sql.CommonDataSource;
 
-public class MainActivity2 extends AppCompatActivity {
+public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog.PdfQualityDialogListener {
 
     DrawerLayout drawerLayout2;
     Toolbar toolbar2;
@@ -281,7 +281,7 @@ public class MainActivity2 extends AppCompatActivity {
 
     }
 
-    private void createPDF() {
+    private void createPDF(String quality) {
         File currentFolder = new File(Var.IMAGE_DIR + "/" + folderName);
         File pdfLocation = new File(Var.PDF_DIR);
 
@@ -410,13 +410,17 @@ public class MainActivity2 extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.createPDF) {
-            alertDialog.show();
+           /* alertDialog.show();
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     createPDF();
                 }
-            },50);
+            },50);*/
+
+            PdfQualityDialog pdfQualityDialog = new PdfQualityDialog();
+            pdfQualityDialog.show(getSupportFragmentManager(), "example dialog");
+
 
         } else if (id == R.id.settingPDF) {
             Snackbar.make(findViewById(R.id.drawerLayout2), "Setting PDF", Snackbar.LENGTH_LONG).show();
@@ -555,5 +559,10 @@ public class MainActivity2 extends AppCompatActivity {
             }
         }
         return bitmap;
+    }
+
+    @Override
+    public void getQualityOfPdf(String quality) {
+        //call the create pdf method with quality parameter
     }
 }

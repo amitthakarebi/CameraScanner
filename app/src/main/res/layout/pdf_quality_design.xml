@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Choose PDF Quality :"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:background="@color/toolbarColor"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/pdfQualityRadioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/bestQualityPDF"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:checked="true"
+                android:layout_height="wrap_content"
+                android:text="Best Quality"
+                />
+
+            <RadioButton
+                android:id="@+id/normalQualityPDF"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Normal Quality"/>
+
+            <RadioButton
+                android:id="@+id/poorQualityPDF"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Poor Quality"/>
+
+        </RadioGroup>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="1. Best Quality : To print pdf pages on A4 size paper"
+        android:textColor="@color/black"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2. Normal Quality : To read pdf on mobile phone."
+        android:textColor="@color/black"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:layout_marginTop="15dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="5dp"
+        android:layout_marginBottom="10dp"
+        android:paddingBottom="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="3. Poor Quality : To send pdf on Email with reduce size."
+        android:textColor="@color/black"
+        android:textSize="12sp"/>
+
+
+</LinearLayout>
