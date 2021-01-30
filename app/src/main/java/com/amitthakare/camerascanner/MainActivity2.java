@@ -421,11 +421,28 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
                 Paint myPaint = new Paint();
                 myPaint.setTextAlign(Paint.Align.RIGHT);
                 myPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
-                myPaint.setTextSize(30);
                 myPaint.setColor(getResources().getColor(R.color.black));
+                float textXpoint=0;
+                float textYpoint=0;
+                
+                if(quality.equals("poor"))
+                {
+                    myPaint.setTextSize(18);
+                    textXpoint = myPageInfo.getPageWidth() - 30;
+                    textYpoint = myPageInfo.getPageHeight() - 8;
 
-                float textXpoint = myPageInfo.getPageWidth() - 60;
-                float textYpoint = myPageInfo.getPageHeight() - 40;
+                }else if(quality.equals("normal"))
+                {
+                    myPaint.setTextSize(40);
+                    textXpoint = myPageInfo.getPageWidth() - 60;
+                    textYpoint = myPageInfo.getPageHeight() - 10;
+
+                }else if(quality.equals("best"))
+                {
+                    myPaint.setTextSize(50);
+                    textXpoint = myPageInfo.getPageWidth() - 80;
+                    textYpoint = myPageInfo.getPageHeight() - 20;
+                }
 
                 Canvas canvas = page.getCanvas();
 
