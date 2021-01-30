@@ -139,20 +139,20 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
     private void setPdfPageData() {
         SharedPreferences.Editor editor = pageSetting.edit();
 
-        editor.putInt("PoorStart",1);
-        editor.putInt("PoorEnd",1);
-        editor.putInt("PoorTop",1);
-        editor.putInt("PoorBottom",1);
+        editor.putInt("PoorStart",15);
+        editor.putInt("PoorEnd",15);
+        editor.putInt("PoorTop",15);
+        editor.putInt("PoorBottom",15);
 
-        editor.putInt("NormalStart",1);
-        editor.putInt("NormalEnd",1);
-        editor.putInt("NormalTop",1);
-        editor.putInt("NormalBottom",1);
+        editor.putInt("NormalStart",32);
+        editor.putInt("NormalEnd",32);
+        editor.putInt("NormalTop",32);
+        editor.putInt("NormalBottom",32);
 
-        editor.putInt("BestStart",1);
-        editor.putInt("BestEnd",1);
-        editor.putInt("BestTop",1);
-        editor.putInt("BestBottom",1);
+        editor.putInt("BestStart",40);
+        editor.putInt("BestEnd",40);
+        editor.putInt("BestTop",40);
+        editor.putInt("BestBottom",40);
 
         editor.apply();
 
@@ -656,5 +656,11 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
                 createPDF(quality);
             }
         },50);
+    }
+
+    @Override
+    protected void onResume() {
+        checkAndApplyPageSetting();
+        super.onResume();
     }
 }
