@@ -73,6 +73,7 @@
             android:layout_height="1754px"
             android:orientation="vertical"
             android:gravity="center"
+            android:padding="12dp"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -85,6 +86,13 @@
                 android:layout_weight="1"
                 android:scaleType="fitCenter"/>
 
+            <ImageView
+                android:id="@+id/invisibleImageViewBest"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:scaleType="fitCenter" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -93,6 +101,7 @@
             android:layout_height="842px"
             android:orientation="vertical"
             android:gravity="center"
+            android:padding="10dp"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -113,17 +122,11 @@
             android:layout_height="2339px"
             android:orientation="vertical"
             android:gravity="center"
+            android:padding="15dp"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
-
-            <ImageView
-                android:id="@+id/invisibleImageViewBest"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
-                android:scaleType="fitCenter"/>
 
         </LinearLayout>
 

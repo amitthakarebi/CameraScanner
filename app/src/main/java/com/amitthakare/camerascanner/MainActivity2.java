@@ -18,7 +18,9 @@ import android.Manifest;
 import android.content.ActivityNotFoundException;
 import android.content.ClipData;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -86,14 +88,74 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
     private AlertDialog.Builder builder;
     private AlertDialog alertDialog;
 
+    SharedPreferences pageSetting;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main2);
+
         createBuilder();
         ini();
         getFolderFiles();
+        checkAndApplyPageSetting();
+
+    }
+
+    private void checkAndApplyPageSetting() {
+        pageSetting = getSharedPreferences("pageSetting",MODE_PRIVATE);
+        if (!pageSetting.contains("PoorStart"))
+        {
+            setPdfPageData();
+            Log.e("setPref",pageSetting.getAll().toString());
+        }else
+        {
+            Log.e("alreadyPref",pageSetting.getAll().toString());
+
+            invisibleLayoutPoor.setPadding(
+                    pageSetting.getInt("PoorStart",-1),
+                    pageSetting.getInt("PoorTop",-1),
+                    pageSetting.getInt("PoorEnd",-1),
+                    pageSetting.getInt("PoorBottom",-1)
+            );
+
+            invisibleLayoutNormal.setPadding(
+                    pageSetting.getInt("NormalStart",-1),
+                    pageSetting.getInt("NormalTop",-1),
+                    pageSetting.getInt("NormalEnd",-1),
+                    pageSetting.getInt("NormalBottom",-1)
+            );
+
+            invisibleLayoutBest.setPadding(
+                    pageSetting.getInt("BestStart",-1),
+                    pageSetting.getInt("BestTop",-1),
+                    pageSetting.getInt("BestEnd",-1),
+                    pageSetting.getInt("BestBottom",-1)
+            );
+        }
+    }
+
+    private void setPdfPageData() {
+        SharedPreferences.Editor editor = pageSetting.edit();
+
+        editor.putInt("PoorStart",1);
+        editor.putInt("PoorEnd",1);
+        editor.putInt("PoorTop",1);
+        editor.putInt("PoorBottom",1);
+
+        editor.putInt("NormalStart",1);
+        editor.putInt("NormalEnd",1);
+        editor.putInt("NormalTop",1);
+        editor.putInt("NormalBottom",1);
+
+        editor.putInt("BestStart",1);
+        editor.putInt("BestEnd",1);
+        editor.putInt("BestTop",1);
+        editor.putInt("BestBottom",1);
+
+        editor.apply();
+
     }
 
     private void ini() {
