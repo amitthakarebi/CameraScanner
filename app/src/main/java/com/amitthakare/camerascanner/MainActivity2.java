@@ -506,9 +506,9 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
             PdfQualityDialog pdfQualityDialog = new PdfQualityDialog();
             pdfQualityDialog.show(getSupportFragmentManager(), "example dialog");
 
-
         } else if (id == R.id.settingPDF) {
-            Snackbar.make(findViewById(R.id.drawerLayout2), "Setting PDF", Snackbar.LENGTH_LONG).show();
+            Intent intent = new Intent(MainActivity2.this,PageSetting.class);
+            startActivity(intent);
         } else if (id == R.id.moveImage) {
             if (item.isChecked()) {
                 item.setChecked(false);

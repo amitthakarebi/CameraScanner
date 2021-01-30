@@ -18,6 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".PageSetting"
+            android:theme="@style/NoActionBarTheme" />
+        <activity
             android:name=".MainActivity2"
             android:theme="@style/NoActionBarTheme" />
         <activity
