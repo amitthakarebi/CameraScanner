@@ -424,7 +424,7 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
                 myPaint.setColor(getResources().getColor(R.color.black));
                 float textXpoint=0;
                 float textYpoint=0;
-                
+
                 if(quality.equals("poor"))
                 {
                     myPaint.setTextSize(18);
@@ -466,8 +466,7 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
 
                     pdfDocument.writeTo(new FileOutputStream(myPDFFile));
                     Toast.makeText(this, "Created", Toast.LENGTH_SHORT).show();
-                    /*Intent intent = new Intent(MainActivity2.this, PDFViewer.class);
-                    startActivity(intent);*/
+
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -476,8 +475,8 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
             sharePDF();
 
         } else {
-            Toast.makeText(this, "Add Some Images!", Toast.LENGTH_SHORT).show();
             alertDialog.cancel();
+            Toast.makeText(this, "Add Some Images!", Toast.LENGTH_SHORT).show();
         }
 
 
@@ -590,7 +589,8 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
                     bitmap = scaledBitMap;
 
                     outStream = new ByteArrayOutputStream();
-                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+                    bitmap = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*0.50),(int)(bitmap.getHeight()*0.50),true);
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outStream);
 
                     //Snackbar.make(findViewById(R.id.drawerLayout2),"Bitmap"+i,Snackbar.LENGTH_LONG).show();
 
@@ -623,7 +623,8 @@ public class MainActivity2 extends AppCompatActivity implements PdfQualityDialog
                 bitmap = scaledBitMap;
 
                 outStream = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
+                bitmap = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*0.50),(int)(bitmap.getHeight()*0.50),true);
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outStream);
 
 
                 try {
