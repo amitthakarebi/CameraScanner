@@ -125,6 +125,13 @@ public class FolderAdapter extends RecyclerView.Adapter<FolderAdapter.MyViewHold
     public boolean RemoveItem(int position)
     {
         File file = new File(Var.IMAGE_DIR+"/"+mData.get(position).getFolderName());
+        if (file.isDirectory())
+        {
+            for (File file1 : file.listFiles())
+            {
+                file1.delete();
+            }
+        }
         if (file.delete())
         {
             mData.remove(position);
